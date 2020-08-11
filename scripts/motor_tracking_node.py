@@ -1,36 +1,17 @@
 #!/usr/bin/env python
 
 # import the necessary packages
-#from collections import deque
-#from tensorflow.keras.preprocessing.image import img_to_array
-#from tensorflow.keras.models import load_model
-
-#import tensorflow as tf
-#import imutils
-#import time
-#import cv2
-#import os
-#import rospkg
-#import sys
 import rospy
 import numpy as np
 
 # import the necessary ROS messages 
-#from std_msgs.msg import String
-#from sensor_msgs.msg import Image
-
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import CameraInfo
 from common_face_application.msg import objCenter as objCoord
 
-#from cv_bridge import CvBridge
-#from cv_bridge import CvBridgeError
-
-
-
 class RobotVisionNavi:
 
-	def __init__(self,buffer=16):
+	def __init__(self):
 
 		rospy.logwarn("Robot Vision (ROI) node [ONLINE]")
 		
@@ -45,12 +26,11 @@ class RobotVisionNavi:
 		
 		# Subscribe to CameraInfo msg
 		cameraInfo_topic = "/cv_camera/camera_info"
-		self.cameraInfo_sub = rospy.Subscriber(cameraInfo_topic, CameraInfo, 				self.cbCameraInfo)
+		self.cameraInfo_sub = rospy.Subscriber(cameraInfo_topic, CameraInfo, self.cbCameraInfo)
 		
 		# Publish to twist msg
 		twist_topic = "/cmd_vel_robot1"
 		self.twist_pub = rospy.Publisher(twist_topic, Twist, queue_size=10)
-		
 
 
 #		# Allow up to one second to connection
@@ -89,8 +69,7 @@ class RobotVisionNavi:
 			self.move.angular.y = 0.00
 			self.move.angular.z = 0.00
 			
-			self.twist_pub.publish(self.move)
-			
+			self.twist_pub.publish(self.move)	
 			
 		else :
 			self.move.linear.x = 0.00
@@ -107,7 +86,7 @@ class RobotVisionNavi:
 	# rospy shutdown callback
 	def cbShutdown(self):
 		try:
-			rospy.logwarn("oil palm (ROI) node [OFFLINE]")
+			rospy.logwarn("MOVE (ROI) node [OFFLINE]")
 		finally:
 			self.move.linear.x = 0
 			self.move.linear.y = 0
